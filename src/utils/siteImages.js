@@ -1,5 +1,7 @@
+import { API_IMG_BASE } from '../config/remoteData'
+
 /**
- * Résolution des URLs médias (base GitHub raw + nom de fichier, ou URL absolue).
+ * Résolution des URLs médias (API_IMG_BASE + nom de fichier, ou URL absolue).
  */
 
 export function resolveMediaUrl(base, value) {
@@ -26,8 +28,7 @@ export function extractContentImages(content) {
   if (!img || typeof img !== 'object') {
     return null
   }
-  const base = typeof img.base === 'string' ? img.base : ''
-  const r = (v) => resolveMediaUrl(base, v)
+  const r = (v) => resolveMediaUrl(API_IMG_BASE, v)
   return {
     logo: r(img.logoSrc ?? img.logo),
     hero: r(img.hero),

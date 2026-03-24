@@ -1,4 +1,4 @@
-import { THEME_URL } from '../config/remoteData'
+import { API_IMG_BASE, THEME_URL } from '../config/remoteData'
 import { resolveMediaUrl } from '../utils/siteImages'
 
 /**
@@ -126,8 +126,7 @@ function setRemoteImagesFromPayload(images) {
     remoteImages = null
     return
   }
-  const base = typeof images.base === 'string' ? images.base : ''
-  const r = (v) => resolveMediaUrl(base, v)
+  const r = (v) => resolveMediaUrl(API_IMG_BASE, v)
   remoteImages = {
     logo: r(images.logo),
     hero: r(images.hero),

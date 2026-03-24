@@ -1,7 +1,9 @@
-import { content } from './content'
 import { resolveForLocale } from '../utils/localeUtils'
+import { extractContentImages, mergeContentAndThemeImages } from '../utils/siteImages'
+import { getRemoteImages } from './theme'
 
-export function buildPageConfig(locale = 'fr', onLocaleChange = () => {}) {
+export function buildPageConfig(content, locale = 'fr', onLocaleChange = () => {}) {
+  const images = mergeContentAndThemeImages(extractContentImages(content), getRemoteImages())
   const nav = resolveForLocale(locale, content.navbar)
   const hero = resolveForLocale(locale, content.hero)
   const features = resolveForLocale(locale, content.features)
@@ -15,7 +17,7 @@ export function buildPageConfig(locale = 'fr', onLocaleChange = () => {}) {
       type: 'navbar',
       props: {
         logo: nav.logo,
-        logoSrc: nav.logoSrc,
+        logoSrc: images.logo,
         links: nav.links,
         ctaText: nav.cta,
         ctaHref: '#contact',
@@ -37,7 +39,7 @@ export function buildPageConfig(locale = 'fr', onLocaleChange = () => {}) {
         ctaHref: '#pricing',
         variant: 'split',
         color: 'primary',
-        imageUrl: hero.imageUrl,
+        imageUrl: images.hero,
         imageAlt: hero.imageAlt,
       },
     },
@@ -59,7 +61,10 @@ export function buildPageConfig(locale = 'fr', onLocaleChange = () => {}) {
         subtitle: bento.subtitle,
         note: bento.note,
         color: 'secondary',
-        items: bento.items,
+        items: bento.items.map((item, index) => ({
+          ...item,
+          imageUrl: images.bento?.[index],
+        })),
       },
     },
     {
@@ -82,7 +87,7 @@ export function buildPageConfig(locale = 'fr', onLocaleChange = () => {}) {
         color: 'secondary',
         items: testimonials.items.map((item, index) => ({
           ...item,
-          avatarUrl: `https://placehold.co/80x80/e5e5e5/171717?text=${index + 1}`,
+          avatarUrl: images.testimonialAvatars?.[index],
         })),
       },
     },

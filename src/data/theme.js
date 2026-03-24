@@ -1,3 +1,6 @@
+import { THEME_URL } from '../config/remoteData'
+import { resolveMediaUrl } from '../utils/siteImages'
+
 /**
  * Thèmes couleur (hex + sémantique) et palette résolue pour les blocs.
  * Les classes Tailwind sont dérivées dans getColorVariant (vars CSS + utilitaires).
@@ -40,7 +43,8 @@ const blend = {
   },
 }
 
-export const themes = {
+/** Valeurs par défaut (merge avec l’API si des clés manquent). */
+const fallbackThemes = {
   primary: {
     surface: '#0a0a0a',
     accent: '#f5f5f5',
@@ -88,9 +92,62 @@ export const themes = {
   },
 }
 
+let remoteThemes = null
+
+/** URLs médias livrées avec `theme.json` (logo, hero, bento, avatars). */
+let remoteImages = null
+
+/**
+ * Appelé après fetch de `theme.json` (GitHub). Fusionne les palettes ; ignore `images` (géré à part).
+ */
+export function setRemoteThemes(next) {
+  if (!next) {
+    remoteThemes = null
+    remoteImages = null
+    return
+  }
+  remoteThemes = {
+    primary: { ...fallbackThemes.primary, ...next.primary },
+    secondary: { ...fallbackThemes.secondary, ...next.secondary },
+    neutral: { ...fallbackThemes.neutral, ...next.neutral },
+  }
+}
+
+/**
+ * @returns {{ logo?: string, hero?: string, favicon?: string, ogImage?: string, bento?: string[], testimonialAvatars?: string[] }}
+ * Complété ou remplacé par `content.images` côté app (voir siteImages.mergeContentAndThemeImages).
+ */
+export function getRemoteImages() {
+  return remoteImages ?? {}
+}
+
+function setRemoteImagesFromPayload(images) {
+  if (!images || typeof images !== 'object') {
+    remoteImages = null
+    return
+  }
+  const base = typeof images.base === 'string' ? images.base : ''
+  const r = (v) => resolveMediaUrl(base, v)
+  remoteImages = {
+    logo: r(images.logo),
+    hero: r(images.hero),
+    favicon: r(images.favicon),
+    ogImage: r(images.ogImage),
+    bento: Array.isArray(images.bento) ? images.bento.map((u) => r(u)).filter(Boolean) : undefined,
+    testimonialAvatars: Array.isArray(images.testimonialAvatars)
+      ? images.testimonialAvatars.map((u) => r(u)).filter(Boolean)
+      : undefined,
+  }
+}
+
+function getThemeRegistry() {
+  return remoteThemes ?? fallbackThemes
+}
+
 const defaultThemeName = 'primary'
 
 function resolveThemeInput(color) {
+  const themes = getThemeRegistry()
   if (color && typeof color === 'object') {
     return { theme: { ...themes[defaultThemeName], ...color }, blend: blend[defaultThemeName] }
   }
@@ -138,4 +195,17 @@ export function getColorVariant(color = defaultThemeName) {
     vars: buildCssVars(theme, b),
     ...classNames,
   }
+}
+
+/**
+ * Charge `theme.json` depuis le dépôt API (GitHub raw) et applique les palettes.
+ */
+export async function loadRemoteTheme() {
+  const res = await fetch(THEME_URL)
+  if (!res.ok) {
+    throw new Error(`theme.json (${res.status})`)
+  }
+  const json = await res.json()
+  setRemoteThemes(json)
+  setRemoteImagesFromPayload(json.images)
 }

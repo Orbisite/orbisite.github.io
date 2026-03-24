@@ -35,7 +35,7 @@ export function buildPageConfig(locale = 'fr', onLocaleChange = () => {}) {
         ctaHref: '#pricing',
         variant: 'split',
         color: 'primary',
-        imageUrl: 'https://placehold.co/900x640/e2e8f0/0f172a?text=Hero+Preview',
+        imageUrl: 'https://placehold.co/900x640/e5e5e5/171717?text=Hero+Preview',
         imageAlt: t.hero.imageAlt,
       },
     },
@@ -80,7 +80,7 @@ export function buildPageConfig(locale = 'fr', onLocaleChange = () => {}) {
         color: 'secondary',
         items: t.testimonials.items.map((item, index) => ({
           ...item,
-          avatarUrl: `https://placehold.co/80x80/f1f5f9/0f172a?text=${index + 1}`,
+          avatarUrl: `https://placehold.co/80x80/e5e5e5/171717?text=${index + 1}`,
         })),
       },
     },

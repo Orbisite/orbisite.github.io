@@ -1,4 +1,4 @@
-import { getColorVariant } from './shared'
+import { getColorVariant } from '../data/theme'
 import Icon from '@mdi/react'
 import { mdiFlash, mdiBullseyeArrow, mdiPuzzle } from '@mdi/js'
 
@@ -12,7 +12,7 @@ function FeaturesBlock({ sectionId, title, subtitle, items = [], color = 'primar
   const palette = getColorVariant(color)
 
   return (
-    <section id={sectionId} className="bg-neutral-950 px-4 py-16 sm:px-6 sm:py-20">
+    <section id={sectionId} style={palette.vars} className={`px-4 py-16 sm:px-6 sm:py-20 ${palette.section}`}>
       <div className="mx-auto max-w-6xl">
         <div className="text-center">
           <span className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${palette.badge}`}>Services</span>

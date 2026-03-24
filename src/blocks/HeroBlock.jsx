@@ -1,4 +1,4 @@
-import { getColorVariant } from './shared'
+import { getColorVariant } from '../data/theme'
 
 function HeroBlock({
   sectionId,
@@ -15,7 +15,7 @@ function HeroBlock({
   const isSplit = variant === 'split'
 
   return (
-    <section id={sectionId} className={`px-4 py-16 sm:px-6 sm:py-20 ${palette.section}`}>
+    <section id={sectionId} style={palette.vars} className={`px-4 py-16 sm:px-6 sm:py-20 ${palette.section}`}>
       <div className={`mx-auto max-w-6xl ${isSplit ? 'grid items-center gap-12 md:grid-cols-2' : 'text-center'}`}>
         <div>
           <span className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${palette.badge}`}>Build faster</span>

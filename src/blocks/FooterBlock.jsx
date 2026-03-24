@@ -1,10 +1,10 @@
-import { getColorVariant } from './shared'
+import { getColorVariant } from '../data/theme'
 
 function FooterBlock({ sectionId, links = [], socials = [], copyright, color = 'neutral' }) {
   const palette = getColorVariant(color)
 
   return (
-    <footer id={sectionId} className="border-t border-neutral-800 bg-neutral-950 px-4 py-10 sm:px-6">
+    <footer id={sectionId} style={palette.vars} className={`border-t border-neutral-800 px-4 py-10 sm:px-6 ${palette.section}`}>
       <div className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-6 md:flex-row md:items-center">
         <div>
           <ul className="flex flex-wrap gap-4">

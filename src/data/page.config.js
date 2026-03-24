@@ -1,27 +1,29 @@
-import { translations } from '../i18n/translations'
+import { content } from './content'
+import { resolveForLocale } from '../utils/localeUtils'
 
 export function buildPageConfig(locale = 'fr', onLocaleChange = () => {}) {
-  const t = translations[locale] ?? translations.fr
+  const nav = resolveForLocale(locale, content.navbar)
+  const hero = resolveForLocale(locale, content.hero)
+  const features = resolveForLocale(locale, content.features)
+  const bento = resolveForLocale(locale, content.bento)
+  const pricing = resolveForLocale(locale, content.pricing)
+  const testimonials = resolveForLocale(locale, content.testimonials)
+  const footer = resolveForLocale(locale, content.footer)
 
   return [
     {
       type: 'navbar',
       props: {
-        logo: 'Orbisite',
-        logoSrc: '/logo_full_no_background.png',
-        links: [
-          { label: t.navbar.services, href: '#services' },
-          { label: t.navbar.showcase, href: '#showcase' },
-          { label: t.navbar.pricing, href: '#pricing' },
-          { label: t.navbar.testimonials, href: '#testimonials' },
-        ],
-        ctaText: t.navbar.cta,
+        logo: nav.logo,
+        logoSrc: nav.logoSrc,
+        links: nav.links,
+        ctaText: nav.cta,
         ctaHref: '#contact',
         sticky: true,
         color: 'primary',
         locale,
-        menuLabel: t.navbar.menu,
-        closeLabel: t.navbar.close,
+        menuLabel: nav.menu,
+        closeLabel: nav.close,
         onLocaleChange,
       },
     },
@@ -29,56 +31,56 @@ export function buildPageConfig(locale = 'fr', onLocaleChange = () => {}) {
       type: 'hero',
       props: {
         sectionId: 'hero',
-        title: t.hero.title,
-        subtitle: t.hero.subtitle,
-        ctaText: t.hero.cta,
+        title: hero.title,
+        subtitle: hero.subtitle,
+        ctaText: hero.cta,
         ctaHref: '#pricing',
         variant: 'split',
         color: 'primary',
-        imageUrl: 'https://placehold.co/900x640/e5e5e5/171717?text=Hero+Preview',
-        imageAlt: t.hero.imageAlt,
+        imageUrl: hero.imageUrl,
+        imageAlt: hero.imageAlt,
       },
     },
     {
       type: 'features',
       props: {
-        sectionId: 'services',
-        title: t.features.title,
-        subtitle: t.features.subtitle,
+        sectionId: features.sectionId,
+        title: features.title,
+        subtitle: features.subtitle,
         color: 'secondary',
-        items: t.features.items,
+        items: features.items,
       },
     },
     {
       type: 'bento',
       props: {
         sectionId: 'showcase',
-        title: t.bento.title,
-        subtitle: t.bento.subtitle,
-        note: t.bento.note,
+        title: bento.title,
+        subtitle: bento.subtitle,
+        note: bento.note,
         color: 'secondary',
-        items: t.bento.items,
+        items: bento.items,
       },
     },
     {
       type: 'pricing',
       props: {
         sectionId: 'pricing',
-        title: t.pricing.title,
-        subtitle: t.pricing.subtitle,
+        title: pricing.title,
+        subtitle: pricing.subtitle,
         color: 'primary',
         highlightedPlan: 1,
-        plans: t.pricing.plans.map((plan) => ({ ...plan, ctaHref: '#contact' })),
+        plans: pricing.plans.map((plan) => ({ ...plan, ctaHref: '#contact' })),
       },
     },
     {
       type: 'testimonials',
       props: {
         sectionId: 'testimonials',
-        title: t.testimonials.title,
-        subtitle: t.testimonials.subtitle,
+        title: testimonials.title,
+        subtitle: testimonials.subtitle,
         color: 'secondary',
-        items: t.testimonials.items.map((item, index) => ({
+        items: testimonials.items.map((item, index) => ({
           ...item,
           avatarUrl: `https://placehold.co/80x80/e5e5e5/171717?text=${index + 1}`,
         })),
@@ -89,9 +91,9 @@ export function buildPageConfig(locale = 'fr', onLocaleChange = () => {}) {
       props: {
         sectionId: 'contact',
         links: [
-          { label: t.footer.privacy, href: '#' },
-          { label: t.footer.terms, href: '#' },
-          { label: t.footer.contact, href: '#contact' },
+          { label: footer.privacy, href: '#' },
+          { label: footer.terms, href: '#' },
+          { label: footer.contact, href: '#contact' },
         ],
         socials: [
           { label: 'X', href: '#' },
@@ -99,7 +101,7 @@ export function buildPageConfig(locale = 'fr', onLocaleChange = () => {}) {
           { label: 'GitHub', href: '#' },
         ],
         color: 'neutral',
-        copyright: t.footer.copyright,
+        copyright: footer.copyright,
       },
     },
   ]

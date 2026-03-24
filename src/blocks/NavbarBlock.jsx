@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { getColorVariant } from './shared'
+import { getColorVariant } from '../data/theme'
 
 function NavbarBlock({
   logo = 'Orbisite',
@@ -18,7 +18,12 @@ function NavbarBlock({
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   return (
-    <header className={`${sticky ? 'sticky top-0 z-40 bg-neutral-950/80 backdrop-blur-md' : 'bg-neutral-950'} border-b border-neutral-800`}>
+    <header
+      style={palette.vars}
+      className={`border-b border-neutral-800 ${
+        sticky ? 'sticky top-0 z-40 bg-[var(--p-surface-sticky)] backdrop-blur-md' : palette.section
+      }`}
+    >
       <nav className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6">
         <a href="#" className="flex items-center">
           {logoSrc ? (

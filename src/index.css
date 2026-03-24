@@ -1,15 +1,27 @@
+@import "tailwindcss";
+
+:root {
+  --color-primary: #ffffff;
+  --color-primary-soft: #d4d4d8;
+  --color-secondary: #e4e4e7;
+  --color-secondary-soft: #a1a1aa;
+  --color-surface: #111111;
+  --color-background: #050505;
+  --color-muted: #a1a1aa;
+  --color-heading: #fafafa;
+}
+
 * {
-  margin: 0;
-  padding: 0;
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
-  font-family: 'Poppins', system-ui, sans-serif;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #000000;
-  color: #eee;
+  margin: 0;
+  font-family: Inter, "Poppins", system-ui, -apple-system, sans-serif;
+  background: radial-gradient(circle at top, #1a1a1a 0%, #0a0a0a 45%, #000000 100%);
+  color: var(--color-heading);
 }

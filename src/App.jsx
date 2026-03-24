@@ -1,39 +1,19 @@
+import { useMemo, useState } from 'react'
+import PageRenderer from './blocks/PageRenderer'
+import { buildPageConfig } from './data/page.config'
+
 function App() {
+  const [locale, setLocale] = useState('fr')
+  const page = useMemo(
+    () => buildPageConfig(locale, () => setLocale((current) => (current === 'fr' ? 'en' : 'fr'))),
+    [locale],
+  )
+
   return (
-    <main style={styles.main}>
-      <img src="/logo_full_no_background.png" alt="Orbisite" style={styles.logo} />
-      <p style={styles.slogan}>
-        Des sites qui gravitent autour de votre projet.
-      </p>
-      <img src="/work_in_progress.png" alt="Site en construction" style={styles.image} />
-      <p style={styles.text}>En cours de construction. Revenez bientôt.</p>
+    <main className="min-h-screen">
+      <PageRenderer page={page} />
     </main>
   )
-}
-
-const styles = {
-  main: {
-    textAlign: 'center',
-    padding: '2rem',
-  },
-  logo: {
-    maxWidth: '100%',
-    width: 280,
-  },
-  image: {
-    maxWidth: '100%',
-    width: 280,
-    marginBottom: '1.5rem',
-  },
-  slogan: {
-    color: '#aaa',
-    fontSize: '1.125rem',
-    marginBottom: '3.5rem',
-  },
-  text: {
-    fontSize: '1rem',
-    marginBottom: '1.5rem',
-  },
 }
 
 export default App

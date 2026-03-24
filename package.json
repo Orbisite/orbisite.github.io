@@ -10,6 +10,7 @@
     "deploy": "npm run build && gh-pages -d dist"
   },
   "dependencies": {
+    "blocks": "github:Orbisite/blocks#main",
     "@mdi/js": "^7.4.47",
     "@mdi/react": "^1.6.1",
     "react": "^18.2.0",

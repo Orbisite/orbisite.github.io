@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
-import PageRenderer from './blocks/PageRenderer'
+import { BlocksThemeProvider, PageRenderer } from 'blocks'
+import { getColorVariant } from './data/theme'
 import { loadContent } from './data/content'
 import { buildPageConfig } from './data/page.config'
 import { getRemoteImages, loadRemoteTheme, setRemoteThemes } from './data/theme'
@@ -83,9 +84,11 @@ function App() {
   }
 
   return (
-    <main className="min-h-screen">
-      <PageRenderer page={page} />
-    </main>
+    <BlocksThemeProvider getColorVariant={getColorVariant}>
+      <main className="min-h-screen">
+        <PageRenderer page={page} />
+      </main>
+    </BlocksThemeProvider>
   )
 }
 

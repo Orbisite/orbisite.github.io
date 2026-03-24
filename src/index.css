@@ -1,4 +1,6 @@
 @import "tailwindcss";
+/* Classes Tailwind du package `blocks` (installé depuis GitHub → node_modules) */
+@source "../node_modules/blocks/src/**/*.{js,jsx}";
 
 :root {
   --color-primary: #ffffff;

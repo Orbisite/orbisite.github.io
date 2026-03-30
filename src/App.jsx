@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { BlocksThemeProvider, PageRenderer } from 'blocks'
+import { BlocksThemeProvider, PageRenderer } from '@orbisite/blocks'
 import { getColorVariant } from './data/theme'
 import { loadContent } from './data/content'
 import { buildPageConfig } from './data/page.config'

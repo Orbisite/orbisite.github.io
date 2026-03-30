@@ -9,7 +9,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   base: '/',
-  // Depuis `node_modules/blocks` (GitHub), certains setups ne résolvent pas les peers ; alias explicite.
+  // Certains setups ne résolvent pas les peers du package GitHub Packages ; alias explicite.
   resolve: {
     alias: {
       '@mdi/react': path.resolve(__dirname, 'node_modules/@mdi/react'),
@@ -17,6 +17,6 @@ export default defineConfig({
     },
   },
   optimizeDeps: {
-    include: ['blocks', '@mdi/react'],
+    include: ['@orbisite/blocks', '@mdi/react'],
   },
 })

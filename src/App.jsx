@@ -3,9 +3,9 @@ import { BlocksThemeProvider, PageRenderer } from '@orbisite/blocks'
 import { getColorVariant } from './data/theme'
 import { loadContent } from './data/content'
 import { buildPageConfig } from './data/page.config'
-import { getRemoteImages, loadRemoteTheme, setRemoteThemes } from './data/theme'
+import { loadRemoteTheme, setRemoteThemes } from './data/theme'
 import { applySiteSettings, loadSiteSettings } from './data/site'
-import { extractContentImages, mergeContentAndThemeImages } from './utils/siteImages'
+import { extractContentImages } from './utils/siteImages'
 
 function App() {
   const [locale, setLocale] = useState('fr')
@@ -17,7 +17,11 @@ function App() {
 
     async function load() {
       try {
-        const [contentJson, siteJson] = await Promise.all([loadContent(), loadRemoteTheme(), loadSiteSettings()])
+        const [contentJson, , siteJson] = await Promise.all([
+          loadContent(),
+          loadRemoteTheme(),
+          loadSiteSettings(),
+        ])
         if (cancelled) {
           return
         }
@@ -43,7 +47,7 @@ function App() {
     if (!content) {
       return
     }
-    const { favicon, ogImage } = mergeContentAndThemeImages(extractContentImages(content), getRemoteImages())
+    const { favicon, ogImage } = extractContentImages(content) ?? {}
     if (favicon) {
       let link = document.querySelector('link[rel="icon"]')
       if (!link) {

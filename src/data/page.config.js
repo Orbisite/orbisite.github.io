@@ -1,9 +1,8 @@
 import { resolveForLocale } from '../utils/localeUtils'
-import { extractContentImages, mergeContentAndThemeImages } from '../utils/siteImages'
-import { getRemoteImages } from './theme'
+import { extractContentImages } from '../utils/siteImages'
 
 export function buildPageConfig(content, locale = 'fr', onLocaleChange = () => {}) {
-  const images = mergeContentAndThemeImages(extractContentImages(content), getRemoteImages())
+  const images = extractContentImages(content) ?? {}
   const nav = resolveForLocale(locale, content.navbar)
   const hero = resolveForLocale(locale, content.hero)
   const features = resolveForLocale(locale, content.features)

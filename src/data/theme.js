@@ -1,5 +1,4 @@
-import { CLIENT_IMG_BASE, THEME_URL } from '../config/remoteData'
-import { resolveMediaUrl } from '../utils/siteImages'
+import { THEME_URL } from '../config/remoteData'
 
 /**
  * Thèmes couleur (hex + sémantique) et palette résolue pour les blocs.
@@ -94,48 +93,18 @@ const fallbackThemes = {
 
 let remoteThemes = null
 
-/** URLs médias livrées avec `theme.json` (logo, hero, bento, avatars). */
-let remoteImages = null
-
 /**
- * Apres fetch de `theme.json` (API client). Fusionne les palettes ; ignore `images` (gere a part).
+ * Apres fetch de `theme.json` (API client). Fusionne les palettes (couleurs uniquement).
  */
 export function setRemoteThemes(next) {
   if (!next) {
     remoteThemes = null
-    remoteImages = null
     return
   }
   remoteThemes = {
     primary: { ...fallbackThemes.primary, ...next.primary },
     secondary: { ...fallbackThemes.secondary, ...next.secondary },
     neutral: { ...fallbackThemes.neutral, ...next.neutral },
-  }
-}
-
-/**
- * @returns {{ logo?: string, hero?: string, favicon?: string, ogImage?: string, bento?: string[], testimonialAvatars?: string[] }}
- * Complété ou remplacé par `content.images` côté app (voir siteImages.mergeContentAndThemeImages).
- */
-export function getRemoteImages() {
-  return remoteImages ?? {}
-}
-
-function setRemoteImagesFromPayload(images) {
-  if (!images || typeof images !== 'object') {
-    remoteImages = null
-    return
-  }
-  const r = (v) => resolveMediaUrl(CLIENT_IMG_BASE, v)
-  remoteImages = {
-    logo: r(images.logo),
-    hero: r(images.hero),
-    favicon: r(images.favicon),
-    ogImage: r(images.ogImage),
-    bento: Array.isArray(images.bento) ? images.bento.map((u) => r(u)).filter(Boolean) : undefined,
-    testimonialAvatars: Array.isArray(images.testimonialAvatars)
-      ? images.testimonialAvatars.map((u) => r(u)).filter(Boolean)
-      : undefined,
   }
 }
 
@@ -206,5 +175,4 @@ export async function loadRemoteTheme() {
   }
   const json = await res.json()
   setRemoteThemes(json)
-  setRemoteImagesFromPayload(json.images)
 }

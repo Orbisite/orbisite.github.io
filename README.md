@@ -18,6 +18,8 @@ Chemins cibles dans `api`:
 - Textes et contenus de sections dans `content.json`
 - Couleurs dans `theme.json` (format hex `#RRGGBB` ou `#RGB`)
 - Meta du site dans `site.json` (`title`, `description`, `og`, `twitter`, `favicon`)
+- Pied de page : `footer` (`linkHrefs`, `socials`, `links` optionnel)
+- CTA et liens : `navbar.ctaHref`, `hero.ctaHref`, `pricing.planCtaHref` (et `ctaHref` par plan si besoin), ancres du menu et liens bento dans `content.json`
 - Images dans `img/`
 
 ### Ce qui est interdit

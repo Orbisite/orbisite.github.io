@@ -20,7 +20,7 @@ export function buildPageConfig(content, locale = 'fr', onLocaleChange = () => {
         logoSrc: images.logo,
         links: nav.links,
         ctaText: nav.cta,
-        ctaHref: '#contact',
+        ctaHref: nav.ctaHref ?? '#contact',
         sticky: true,
         color: 'primary',
         locale,
@@ -36,7 +36,7 @@ export function buildPageConfig(content, locale = 'fr', onLocaleChange = () => {
         title: hero.title,
         subtitle: hero.subtitle,
         ctaText: hero.cta,
-        ctaHref: '#pricing',
+        ctaHref: hero.ctaHref ?? '#pricing',
         variant: 'split',
         color: 'primary',
         imageUrl: images.hero,
@@ -74,8 +74,12 @@ export function buildPageConfig(content, locale = 'fr', onLocaleChange = () => {
         title: pricing.title,
         subtitle: pricing.subtitle,
         color: 'primary',
-        highlightedPlan: 1,
-        plans: pricing.plans.map((plan) => ({ ...plan, ctaHref: '#contact' })),
+        highlightedPlan:
+          typeof pricing.highlightedPlan === 'number' ? pricing.highlightedPlan : 0,
+        plans: pricing.plans.map((plan) => ({
+          ...plan,
+          ctaHref: plan.ctaHref ?? pricing.planCtaHref ?? '#contact',
+        })),
       },
     },
     {
@@ -95,16 +99,28 @@ export function buildPageConfig(content, locale = 'fr', onLocaleChange = () => {
       type: 'footer',
       props: {
         sectionId: 'contact',
-        links: [
-          { label: footer.privacy, href: '#' },
-          { label: footer.terms, href: '#' },
-          { label: footer.contact, href: '#contact' },
-        ],
-        socials: [
-          { label: 'X', href: '#' },
-          { label: 'LinkedIn', href: '#' },
-          { label: 'GitHub', href: '#' },
-        ],
+        links:
+          Array.isArray(footer.links) && footer.links.length > 0 ?
+            footer.links.map((l) => ({
+              label: l.label,
+              href: l.href ?? '#',
+            }))
+          : [
+              { label: footer.privacy, href: footer.linkHrefs?.privacy ?? '#' },
+              { label: footer.terms, href: footer.linkHrefs?.terms ?? '#' },
+              { label: footer.contact, href: footer.linkHrefs?.contact ?? '#contact' },
+            ],
+        socials:
+          Array.isArray(footer.socials) && footer.socials.length > 0 ?
+            footer.socials.map((s) => ({
+              label: s.label,
+              href: s.href ?? '#',
+            }))
+          : [
+              { label: 'X', href: '#' },
+              { label: 'LinkedIn', href: '#' },
+              { label: 'GitHub', href: '#' },
+            ],
         color: 'neutral',
         copyright: footer.copyright,
       },

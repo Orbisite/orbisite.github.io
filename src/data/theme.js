@@ -123,8 +123,46 @@ function resolveThemeInput(color) {
   return { theme: themes[name], blend: blend[name] ?? blend[defaultThemeName] }
 }
 
+/** Voir leo-giraud-site/src/data/theme.js — mêmes clés optionnelles dans theme.json */
+function buildSemanticVars(theme) {
+  const contentEmphasis = theme.contentEmphasis ?? '#fafafa'
+  const contentHeading = theme.contentHeading ?? '#f5f5f5'
+  const contentBody = theme.contentBody ?? '#d4d4d4'
+  const contentMuted = theme.contentMuted ?? '#a3a3a3'
+  const contentSoft = theme.contentSoft ?? '#737373'
+  const contentBorder = theme.contentBorder ?? '#404040'
+
+  return {
+    '--p-content-emphasis': contentEmphasis,
+    '--p-content-heading': contentHeading,
+    '--p-content-body': contentBody,
+    '--p-content-muted': contentMuted,
+    '--p-content-soft': contentSoft,
+    '--p-content-border': contentBorder,
+    '--p-on-dark-emphasis': theme.onDarkEmphasis ?? contentEmphasis,
+    '--p-on-dark-heading': theme.onDarkHeading ?? contentHeading,
+    '--p-on-dark-body': theme.onDarkBody ?? contentBody,
+    '--p-on-dark-muted': theme.onDarkMuted ?? contentMuted,
+    '--p-on-dark-soft': theme.onDarkSoft ?? contentSoft,
+    '--p-elevated-bg': theme.elevatedBg ?? '#171717',
+    '--p-elevated-border': theme.elevatedBorder ?? '#404040',
+    '--p-elevated-bg-soft': theme.elevatedBgSoft ?? 'rgba(23, 23, 23, 0.55)',
+    '--p-elevated-bg-mid': theme.elevatedBgMid ?? 'rgba(38, 38, 38, 0.4)',
+    '--p-elevated-bg-flat': theme.elevatedBgFlat ?? 'rgba(23, 23, 23, 0.7)',
+    '--p-elevated-bg-inset': theme.elevatedBgInset ?? 'rgba(23, 23, 23, 0.8)',
+    '--p-elevated-bg-notice': theme.elevatedBgNotice ?? 'rgba(23, 23, 23, 0.6)',
+    '--p-elevated-bg-band':
+      theme.elevatedBgBand ?? 'linear-gradient(to bottom right, #171717, #0a0a0a, #171717)',
+    '--p-elevated-shadow': theme.elevatedShadow ?? '0 10px 15px -3px rgb(0 0 0 / 0.25)',
+    '--p-elevated-shadow-lg': theme.elevatedShadowLg ?? '0 25px 50px -12px rgb(0 0 0 / 0.35)',
+    '--p-elevated-shadow-xl': theme.elevatedShadowXl ?? '0 25px 50px -12px rgb(0 0 0 / 0.45)',
+    '--p-elevated-shadow-2xl': theme.elevatedShadow2xl ?? '0 25px 50px -12px rgb(0 0 0 / 0.5)',
+  }
+}
+
 function buildCssVars(theme, b) {
   return {
+    ...buildSemanticVars(theme),
     '--p-surface': theme.surface,
     '--p-surface-sticky': withAlpha(theme.surface, 0.8),
     '--p-accent': theme.accent,

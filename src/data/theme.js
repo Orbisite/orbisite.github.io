@@ -123,14 +123,75 @@ function resolveThemeInput(color) {
   return { theme: themes[name], blend: blend[name] ?? blend[defaultThemeName] }
 }
 
-/** Voir leo-giraud-site/src/data/theme.js — mêmes clés optionnelles dans theme.json */
+function surfaceIsLight(hex) {
+  if (!hex || typeof hex !== 'string') {
+    return false
+  }
+  try {
+    const [r, g, b] = hexToRgb(hex)
+    const lin = (c) => {
+      const x = c / 255
+      return x <= 0.03928 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4
+    }
+    const L = 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b)
+    return L > 0.55
+  } catch {
+    return false
+  }
+}
+
+const SEMANTIC_DEFAULTS_DARK = {
+  contentEmphasis: '#fafafa',
+  contentHeading: '#f5f5f5',
+  contentBody: '#d4d4d4',
+  contentMuted: '#a3a3a3',
+  contentSoft: '#737373',
+  contentBorder: '#404040',
+  elevatedBg: '#171717',
+  elevatedBorder: '#404040',
+  elevatedBgSoft: 'rgba(23, 23, 23, 0.55)',
+  elevatedBgMid: 'rgba(38, 38, 38, 0.4)',
+  elevatedBgFlat: 'rgba(23, 23, 23, 0.7)',
+  elevatedBgInset: 'rgba(23, 23, 23, 0.8)',
+  elevatedBgNotice: 'rgba(23, 23, 23, 0.6)',
+  elevatedBgBand: 'linear-gradient(to bottom right, #171717, #0a0a0a, #171717)',
+  elevatedShadow: '0 10px 15px -3px rgb(0 0 0 / 0.25)',
+  elevatedShadowLg: '0 25px 50px -12px rgb(0 0 0 / 0.35)',
+  elevatedShadowXl: '0 25px 50px -12px rgb(0 0 0 / 0.45)',
+  elevatedShadow2xl: '0 25px 50px -12px rgb(0 0 0 / 0.5)',
+}
+
+const SEMANTIC_DEFAULTS_LIGHT = {
+  contentEmphasis: '#0c0a09',
+  contentHeading: '#1c1917',
+  contentBody: '#44403c',
+  contentMuted: '#78716c',
+  contentSoft: '#57534e',
+  contentBorder: '#e7e5e4',
+  elevatedBg: '#ffffff',
+  elevatedBorder: '#e7e5e4',
+  elevatedBgSoft: 'rgba(255, 255, 255, 0.92)',
+  elevatedBgMid: 'rgba(250, 250, 249, 0.98)',
+  elevatedBgFlat: '#fafaf9',
+  elevatedBgInset: '#ffffff',
+  elevatedBgNotice: 'rgba(255, 247, 237, 0.97)',
+  elevatedBgBand: 'linear-gradient(to bottom right, #fff7ed, #ffffff, #fffdfb)',
+  elevatedShadow: '0 10px 15px -3px rgb(15 23 42 / 0.06)',
+  elevatedShadowLg: '0 25px 50px -12px rgb(15 23 42 / 0.08), 0 0 0 1px rgb(231 229 228 / 0.9)',
+  elevatedShadowXl: '0 25px 50px -12px rgb(15 23 42 / 0.1)',
+  elevatedShadow2xl: '0 25px 50px -12px rgb(15 23 42 / 0.12)',
+}
+
+/** Clés optionnelles theme.json ; défauts dérivés clair/sombre selon la luminance de `surface`. */
 function buildSemanticVars(theme) {
-  const contentEmphasis = theme.contentEmphasis ?? '#fafafa'
-  const contentHeading = theme.contentHeading ?? '#f5f5f5'
-  const contentBody = theme.contentBody ?? '#d4d4d4'
-  const contentMuted = theme.contentMuted ?? '#a3a3a3'
-  const contentSoft = theme.contentSoft ?? '#737373'
-  const contentBorder = theme.contentBorder ?? '#404040'
+  const d = surfaceIsLight(theme.surface) ? SEMANTIC_DEFAULTS_LIGHT : SEMANTIC_DEFAULTS_DARK
+
+  const contentEmphasis = theme.contentEmphasis ?? d.contentEmphasis
+  const contentHeading = theme.contentHeading ?? d.contentHeading
+  const contentBody = theme.contentBody ?? d.contentBody
+  const contentMuted = theme.contentMuted ?? d.contentMuted
+  const contentSoft = theme.contentSoft ?? d.contentSoft
+  const contentBorder = theme.contentBorder ?? d.contentBorder
 
   return {
     '--p-content-emphasis': contentEmphasis,
@@ -144,19 +205,18 @@ function buildSemanticVars(theme) {
     '--p-on-dark-body': theme.onDarkBody ?? contentBody,
     '--p-on-dark-muted': theme.onDarkMuted ?? contentMuted,
     '--p-on-dark-soft': theme.onDarkSoft ?? contentSoft,
-    '--p-elevated-bg': theme.elevatedBg ?? '#171717',
-    '--p-elevated-border': theme.elevatedBorder ?? '#404040',
-    '--p-elevated-bg-soft': theme.elevatedBgSoft ?? 'rgba(23, 23, 23, 0.55)',
-    '--p-elevated-bg-mid': theme.elevatedBgMid ?? 'rgba(38, 38, 38, 0.4)',
-    '--p-elevated-bg-flat': theme.elevatedBgFlat ?? 'rgba(23, 23, 23, 0.7)',
-    '--p-elevated-bg-inset': theme.elevatedBgInset ?? 'rgba(23, 23, 23, 0.8)',
-    '--p-elevated-bg-notice': theme.elevatedBgNotice ?? 'rgba(23, 23, 23, 0.6)',
-    '--p-elevated-bg-band':
-      theme.elevatedBgBand ?? 'linear-gradient(to bottom right, #171717, #0a0a0a, #171717)',
-    '--p-elevated-shadow': theme.elevatedShadow ?? '0 10px 15px -3px rgb(0 0 0 / 0.25)',
-    '--p-elevated-shadow-lg': theme.elevatedShadowLg ?? '0 25px 50px -12px rgb(0 0 0 / 0.35)',
-    '--p-elevated-shadow-xl': theme.elevatedShadowXl ?? '0 25px 50px -12px rgb(0 0 0 / 0.45)',
-    '--p-elevated-shadow-2xl': theme.elevatedShadow2xl ?? '0 25px 50px -12px rgb(0 0 0 / 0.5)',
+    '--p-elevated-bg': theme.elevatedBg ?? d.elevatedBg,
+    '--p-elevated-border': theme.elevatedBorder ?? d.elevatedBorder,
+    '--p-elevated-bg-soft': theme.elevatedBgSoft ?? d.elevatedBgSoft,
+    '--p-elevated-bg-mid': theme.elevatedBgMid ?? d.elevatedBgMid,
+    '--p-elevated-bg-flat': theme.elevatedBgFlat ?? d.elevatedBgFlat,
+    '--p-elevated-bg-inset': theme.elevatedBgInset ?? d.elevatedBgInset,
+    '--p-elevated-bg-notice': theme.elevatedBgNotice ?? d.elevatedBgNotice,
+    '--p-elevated-bg-band': theme.elevatedBgBand ?? d.elevatedBgBand,
+    '--p-elevated-shadow': theme.elevatedShadow ?? d.elevatedShadow,
+    '--p-elevated-shadow-lg': theme.elevatedShadowLg ?? d.elevatedShadowLg,
+    '--p-elevated-shadow-xl': theme.elevatedShadowXl ?? d.elevatedShadowXl,
+    '--p-elevated-shadow-2xl': theme.elevatedShadow2xl ?? d.elevatedShadow2xl,
   }
 }
 

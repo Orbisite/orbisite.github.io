@@ -1,7 +1,7 @@
 import { CONTENT_URL } from '../config/remoteData'
 
 /**
- * Charge `content.json` depuis le dépôt API (GitHub raw).
+ * Charge `content.json` depuis l'API client.
  * @returns {Promise<object>} Objet racine (navbar, hero, features, …)
  */
 export async function loadContent() {

@@ -1,9 +1,9 @@
-/** Contenu et thème distants (repo Orbisite/api, branche main). */
+/** Source principale: repo API client (GitHub raw). */
 export const CONTENT_URL = 'https://raw.githubusercontent.com/Orbisite/api/main/content.json'
 export const THEME_URL = 'https://raw.githubusercontent.com/Orbisite/api/main/theme.json'
+export const SITE_URL = 'https://raw.githubusercontent.com/Orbisite/api/main/site.json'
 
 /**
- * URL de base des fichiers dans `api/img/` (GitHub raw).
- * Les champs `images` de theme.json / content.json ne contiennent que des noms de fichier ou des URLs absolues.
+ * URL de base des images client (repo API).
  */
-export const API_IMG_BASE = 'https://raw.githubusercontent.com/Orbisite/api/main/img'
+export const CLIENT_IMG_BASE = 'https://raw.githubusercontent.com/Orbisite/api/main/img'

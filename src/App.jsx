@@ -4,6 +4,7 @@ import { getColorVariant } from './data/theme'
 import { loadContent } from './data/content'
 import { buildPageConfig } from './data/page.config'
 import { getRemoteImages, loadRemoteTheme, setRemoteThemes } from './data/theme'
+import { applySiteSettings, loadSiteSettings } from './data/site'
 import { extractContentImages, mergeContentAndThemeImages } from './utils/siteImages'
 
 function App() {
@@ -16,10 +17,11 @@ function App() {
 
     async function load() {
       try {
-        const [contentJson] = await Promise.all([loadContent(), loadRemoteTheme()])
+        const [contentJson, siteJson] = await Promise.all([loadContent(), loadRemoteTheme(), loadSiteSettings()])
         if (cancelled) {
           return
         }
+        applySiteSettings(siteJson)
         setContent(contentJson)
         setStatus({ loading: false, error: null })
       } catch (e) {

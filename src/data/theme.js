@@ -1,4 +1,4 @@
-import { API_IMG_BASE, THEME_URL } from '../config/remoteData'
+import { CLIENT_IMG_BASE, THEME_URL } from '../config/remoteData'
 import { resolveMediaUrl } from '../utils/siteImages'
 
 /**
@@ -98,7 +98,7 @@ let remoteThemes = null
 let remoteImages = null
 
 /**
- * Appelé après fetch de `theme.json` (GitHub). Fusionne les palettes ; ignore `images` (géré à part).
+ * Apres fetch de `theme.json` (API client). Fusionne les palettes ; ignore `images` (gere a part).
  */
 export function setRemoteThemes(next) {
   if (!next) {
@@ -126,7 +126,7 @@ function setRemoteImagesFromPayload(images) {
     remoteImages = null
     return
   }
-  const r = (v) => resolveMediaUrl(API_IMG_BASE, v)
+  const r = (v) => resolveMediaUrl(CLIENT_IMG_BASE, v)
   remoteImages = {
     logo: r(images.logo),
     hero: r(images.hero),
@@ -197,7 +197,7 @@ export function getColorVariant(color = defaultThemeName) {
 }
 
 /**
- * Charge `theme.json` depuis le dépôt API (GitHub raw) et applique les palettes.
+ * Charge `theme.json` depuis l'API client.
  */
 export async function loadRemoteTheme() {
   const res = await fetch(THEME_URL)

@@ -1,7 +1,7 @@
-import { API_IMG_BASE } from '../config/remoteData'
+import { CLIENT_IMG_BASE } from '../config/remoteData'
 
 /**
- * Résolution des URLs médias (API_IMG_BASE + nom de fichier, ou URL absolue).
+ * Resolution des URLs medias (API client), ou URL absolue.
  */
 
 export function resolveMediaUrl(base, value) {
@@ -20,7 +20,7 @@ export function resolveMediaUrl(base, value) {
 }
 
 /**
- * Lit `content.images` depuis content.json (API).
+ * Lit `content.images` depuis `content.json` (API client).
  * @returns {object | null}
  */
 export function extractContentImages(content) {
@@ -28,7 +28,7 @@ export function extractContentImages(content) {
   if (!img || typeof img !== 'object') {
     return null
   }
-  const r = (v) => resolveMediaUrl(API_IMG_BASE, v)
+  const r = (v) => resolveMediaUrl(CLIENT_IMG_BASE, v)
   return {
     logo: r(img.logoSrc ?? img.logo),
     hero: r(img.hero),

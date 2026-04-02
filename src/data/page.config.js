@@ -12,6 +12,7 @@ export function buildPageConfig(content, locale = 'fr', onLocaleChange = () => {
   const testimonials = resolveForLocale(locale, content.testimonials)
   const footer = resolveForLocale(locale, content.footer)
 
+  // Structure verrouillee: l'ordre et les types de blocs restent definis ici.
   return [
     {
       type: 'navbar',

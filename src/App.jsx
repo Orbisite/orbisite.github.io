@@ -1,11 +1,59 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useLayoutEffect, useMemo, useState } from 'react'
+import { Link, useLocation } from 'react-router-dom'
 import { BlocksThemeProvider, PageRenderer } from '@orbisite/blocks'
 import { getColorVariant } from './data/theme'
 import { loadContent } from './data/content'
 import { buildPageConfig } from './data/page.config'
 import { loadRemoteTheme, setRemoteThemes } from './data/theme'
 import { applySiteSettings, loadSiteSettings } from './data/site'
+import { getContentForRoute } from './data/routeContent'
 import { extractContentImages } from './utils/siteImages'
+
+function ScrollToTop() {
+  const { pathname } = useLocation()
+  useLayoutEffect(() => {
+    window.scrollTo(0, 0)
+  }, [pathname])
+  return null
+}
+
+function RoutedPage({ content, locale, setLocale }) {
+  const { pathname } = useLocation()
+  const route = useMemo(() => getContentForRoute(content, pathname), [content, pathname])
+
+  const page = useMemo(() => {
+    if (!route.merged) {
+      return []
+    }
+    return buildPageConfig(
+      route.merged,
+      locale,
+      () => setLocale((current) => (current === 'fr' ? 'en' : 'fr')),
+      {
+        sections: route.sections,
+        spaLinkComponent: Link,
+        logoHref: '/',
+      },
+    )
+  }, [route.merged, route.sections, locale, setLocale])
+
+  if (route.notFound) {
+    return (
+      <main className="flex min-h-screen flex-col items-center justify-center gap-4 bg-neutral-950 px-6 text-center text-neutral-300">
+        <p className="text-lg text-neutral-100">Page introuvable</p>
+        <Link to="/" className="text-sm font-medium text-sky-400 hover:text-sky-300">
+          Retour à l’accueil
+        </Link>
+      </main>
+    )
+  }
+
+  return (
+    <main className="min-h-screen">
+      <PageRenderer page={page} />
+    </main>
+  )
+}
 
 function App() {
   const [locale, setLocale] = useState('fr')
@@ -64,14 +112,6 @@ function App() {
     }
   }, [content])
 
-  const page = useMemo(
-    () =>
-      content
-        ? buildPageConfig(content, locale, () => setLocale((current) => (current === 'fr' ? 'en' : 'fr')))
-        : [],
-    [content, locale],
-  )
-
   if (status.loading) {
     return (
       <main className="flex min-h-screen items-center justify-center bg-neutral-950 text-neutral-400">
@@ -91,9 +131,8 @@ function App() {
 
   return (
     <BlocksThemeProvider getColorVariant={getColorVariant}>
-      <main className="min-h-screen">
-        <PageRenderer page={page} />
-      </main>
+      <ScrollToTop />
+      <RoutedPage content={content} locale={locale} setLocale={setLocale} />
     </BlocksThemeProvider>
   )
 }

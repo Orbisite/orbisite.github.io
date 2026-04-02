@@ -1,7 +1,33 @@
 import { resolveForLocale } from '../utils/localeUtils'
 import { extractContentImages } from '../utils/siteImages'
 
-export function buildPageConfig(content, locale = 'fr', onLocaleChange = () => {}) {
+/** Ordre par défaut des blocs sur la page d’accueil (sans clé `pages` dans le JSON). */
+export const DEFAULT_SECTION_ORDER = [
+  'navbar',
+  'hero',
+  'features',
+  'bento',
+  'pricing',
+  'testimonials',
+  'footer',
+]
+
+/**
+ * @param {object} content — JSON fusionné pour la route courante
+ * @param {string} locale
+ * @param {() => void} onLocaleChange
+ * @param {{ sections?: string[] | null, spaLinkComponent?: import('react').ElementType | null, logoHref?: string }} [options]
+ */
+export function buildPageConfig(content, locale = 'fr', onLocaleChange = () => {}, options = {}) {
+  const {
+    sections = null,
+    spaLinkComponent = null,
+    logoHref = '#',
+  } = options
+
+  const order =
+    Array.isArray(sections) && sections.length > 0 ? sections : DEFAULT_SECTION_ORDER
+
   const images = extractContentImages(content) ?? {}
   const nav = resolveForLocale(locale, content.navbar)
   const hero = resolveForLocale(locale, content.hero)
@@ -11,9 +37,8 @@ export function buildPageConfig(content, locale = 'fr', onLocaleChange = () => {
   const testimonials = resolveForLocale(locale, content.testimonials)
   const footer = resolveForLocale(locale, content.footer)
 
-  // Structure verrouillee: l'ordre et les types de blocs restent definis ici.
-  return [
-    {
+  const blocks = {
+    navbar: () => ({
       type: 'navbar',
       props: {
         logo: nav.logo,
@@ -27,9 +52,11 @@ export function buildPageConfig(content, locale = 'fr', onLocaleChange = () => {
         menuLabel: nav.menu,
         closeLabel: nav.close,
         onLocaleChange,
+        spaLinkComponent,
+        logoHref,
       },
-    },
-    {
+    }),
+    hero: () => ({
       type: 'hero',
       props: {
         sectionId: 'hero',
@@ -42,8 +69,8 @@ export function buildPageConfig(content, locale = 'fr', onLocaleChange = () => {
         imageUrl: images.hero,
         imageAlt: hero.imageAlt,
       },
-    },
-    {
+    }),
+    features: () => ({
       type: 'features',
       props: {
         sectionId: features.sectionId,
@@ -52,8 +79,8 @@ export function buildPageConfig(content, locale = 'fr', onLocaleChange = () => {
         color: 'secondary',
         items: features.items,
       },
-    },
-    {
+    }),
+    bento: () => ({
       type: 'bento',
       props: {
         sectionId: 'showcase',
@@ -66,8 +93,8 @@ export function buildPageConfig(content, locale = 'fr', onLocaleChange = () => {
           imageUrl: images.bento?.[index],
         })),
       },
-    },
-    {
+    }),
+    pricing: () => ({
       type: 'pricing',
       props: {
         sectionId: 'pricing',
@@ -81,8 +108,8 @@ export function buildPageConfig(content, locale = 'fr', onLocaleChange = () => {
           ctaHref: plan.ctaHref ?? pricing.planCtaHref ?? '#contact',
         })),
       },
-    },
-    {
+    }),
+    testimonials: () => ({
       type: 'testimonials',
       props: {
         sectionId: 'testimonials',
@@ -94,8 +121,8 @@ export function buildPageConfig(content, locale = 'fr', onLocaleChange = () => {
           avatarUrl: images.testimonialAvatars?.[index],
         })),
       },
-    },
-    {
+    }),
+    footer: () => ({
       type: 'footer',
       props: {
         sectionId: 'contact',
@@ -124,6 +151,15 @@ export function buildPageConfig(content, locale = 'fr', onLocaleChange = () => {
         color: 'neutral',
         copyright: footer.copyright,
       },
-    },
-  ]
+    }),
+  }
+
+  const out = []
+  for (const id of order) {
+    const fn = blocks[id]
+    if (fn) {
+      out.push(fn())
+    }
+  }
+  return out
 }

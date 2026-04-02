@@ -1,10 +1,9 @@
 import { useEffect, useLayoutEffect, useMemo, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { BlocksThemeProvider, PageRenderer } from '@orbisite/blocks'
-import { getColorVariant } from './data/theme'
+import { getColorVariant, getContentScheme, loadRemoteTheme, setRemoteThemes } from './data/theme'
 import { loadContent } from './data/content'
 import { buildPageConfig } from './data/page.config'
-import { loadRemoteTheme, setRemoteThemes } from './data/theme'
 import { applySiteSettings, loadSiteSettings } from './data/site'
 import { getContentForRoute } from './data/routeContent'
 import { extractContentImages } from './utils/siteImages'
@@ -130,7 +129,7 @@ function App() {
   }
 
   return (
-    <BlocksThemeProvider getColorVariant={getColorVariant}>
+    <BlocksThemeProvider getColorVariant={getColorVariant} contentScheme={getContentScheme()}>
       <ScrollToTop />
       <RoutedPage content={content} locale={locale} setLocale={setLocale} />
     </BlocksThemeProvider>

@@ -130,6 +130,11 @@ export function getContentScheme() {
   return remoteContentScheme
 }
 
+export function getPrimarySurface() {
+  const t = remoteThemes ?? fallbackThemes
+  return t.primary.surface
+}
+
 /**
  * Après fetch de `theme.json` (API client). Fusionne les palettes ; `contentScheme` à la racine optionnel.
  */

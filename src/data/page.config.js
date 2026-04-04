@@ -54,6 +54,8 @@ export function buildPageConfig(content, locale = 'fr', onLocaleChange = () => {
         onLocaleChange,
         spaLinkComponent,
         logoHref,
+        logoOpenInNewTab: nav.logoOpenInNewTab,
+        ctaOpenInNewTab: nav.ctaOpenInNewTab,
       },
     }),
     hero: () => ({
@@ -69,6 +71,7 @@ export function buildPageConfig(content, locale = 'fr', onLocaleChange = () => {
         imageUrl: images.hero,
         imageAlt: hero.imageAlt,
         spaLinkComponent,
+        ctaOpenInNewTab: hero.ctaOpenInNewTab,
       },
     }),
     features: () => ({
@@ -132,6 +135,7 @@ export function buildPageConfig(content, locale = 'fr', onLocaleChange = () => {
             footer.links.map((l) => ({
               label: l.label,
               href: l.href ?? '#',
+              openInNewTab: l.openInNewTab,
             }))
           : [
               { label: footer.privacy, href: footer.linkHrefs?.privacy ?? '#' },
@@ -143,6 +147,7 @@ export function buildPageConfig(content, locale = 'fr', onLocaleChange = () => {
             footer.socials.map((s) => ({
               label: s.label,
               href: s.href ?? '#',
+              openInNewTab: s.openInNewTab,
             }))
           : [
               { label: 'X', href: '#' },

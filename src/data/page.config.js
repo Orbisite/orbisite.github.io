@@ -68,6 +68,7 @@ export function buildPageConfig(content, locale = 'fr', onLocaleChange = () => {
         color: 'primary',
         imageUrl: images.hero,
         imageAlt: hero.imageAlt,
+        spaLinkComponent,
       },
     }),
     features: () => ({

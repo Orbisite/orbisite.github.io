@@ -43,7 +43,10 @@ export function buildPageConfig(content, locale = 'fr', onLocaleChange = () => {
       props: {
         logo: nav.logo,
         logoSrc: images.logo,
-        links: nav.links,
+        links: (nav.links ?? []).map((link) => {
+          const { openInNewTab, targetBlank, ...rest } = link
+          return { ...rest, openInNewTab: openInNewTab ?? targetBlank }
+        }),
         ctaText: nav.cta,
         ctaHref: nav.ctaHref ?? '#contact',
         sticky: true,
@@ -54,8 +57,8 @@ export function buildPageConfig(content, locale = 'fr', onLocaleChange = () => {
         onLocaleChange,
         spaLinkComponent,
         logoHref,
-        logoOpenInNewTab: nav.logoOpenInNewTab,
-        ctaOpenInNewTab: nav.ctaOpenInNewTab,
+        logoOpenInNewTab: nav.logoOpenInNewTab ?? nav.logoTargetBlank,
+        ctaOpenInNewTab: nav.ctaOpenInNewTab ?? nav.ctaTargetBlank,
       },
     }),
     hero: () => ({
@@ -71,7 +74,7 @@ export function buildPageConfig(content, locale = 'fr', onLocaleChange = () => {
         imageUrl: images.hero,
         imageAlt: hero.imageAlt,
         spaLinkComponent,
-        ctaOpenInNewTab: hero.ctaOpenInNewTab,
+        ctaOpenInNewTab: hero.ctaOpenInNewTab ?? hero.ctaTargetBlank,
       },
     }),
     features: () => ({
@@ -92,10 +95,10 @@ export function buildPageConfig(content, locale = 'fr', onLocaleChange = () => {
         subtitle: bento.subtitle,
         note: bento.note,
         color: 'secondary',
-        items: bento.items.map((item, index) => ({
-          ...item,
-          imageUrl: images.bento?.[index],
-        })),
+        items: bento.items.map((item, index) => {
+          const { openInNewTab, targetBlank, ...rest } = item
+          return { ...rest, openInNewTab: openInNewTab ?? targetBlank, imageUrl: images.bento?.[index] }
+        }),
       },
     }),
     pricing: () => ({
@@ -107,10 +110,14 @@ export function buildPageConfig(content, locale = 'fr', onLocaleChange = () => {
         color: 'primary',
         highlightedPlan:
           typeof pricing.highlightedPlan === 'number' ? pricing.highlightedPlan : 0,
-        plans: pricing.plans.map((plan) => ({
-          ...plan,
-          ctaHref: plan.ctaHref ?? pricing.planCtaHref ?? '#contact',
-        })),
+        plans: pricing.plans.map((plan) => {
+          const { openInNewTab, targetBlank, ...rest } = plan
+          return {
+            ...rest,
+            openInNewTab: openInNewTab ?? targetBlank,
+            ctaHref: plan.ctaHref ?? pricing.planCtaHref ?? '#contact',
+          }
+        }),
       },
     }),
     testimonials: () => ({
@@ -135,7 +142,7 @@ export function buildPageConfig(content, locale = 'fr', onLocaleChange = () => {
             footer.links.map((l) => ({
               label: l.label,
               href: l.href ?? '#',
-              openInNewTab: l.openInNewTab,
+              openInNewTab: l.openInNewTab ?? l.targetBlank,
             }))
           : [
               { label: footer.privacy, href: footer.linkHrefs?.privacy ?? '#' },
@@ -147,7 +154,7 @@ export function buildPageConfig(content, locale = 'fr', onLocaleChange = () => {
             footer.socials.map((s) => ({
               label: s.label,
               href: s.href ?? '#',
-              openInNewTab: s.openInNewTab,
+              openInNewTab: s.openInNewTab ?? s.targetBlank,
             }))
           : [
               { label: 'X', href: '#' },

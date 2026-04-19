@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useMemo, useState } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, Route, Routes, useLocation } from 'react-router-dom'
 import { BlocksThemeProvider, PageRenderer, applyDocumentChrome } from '@orbisite/blocks'
 import {
   getColorVariant,
@@ -13,6 +13,8 @@ import { buildPageConfig } from './data/page.config'
 import { applySiteSettings, loadSiteSettings } from './data/site'
 import { getContentForRoute } from './data/routeContent'
 import { extractContentImages } from './utils/siteImages'
+import LegalDocumentPage from './legal/LegalDocumentPage.jsx'
+import { privacy, terms } from './legal/legalContent.js'
 
 function ScrollToTop() {
   const { pathname } = useLocation()
@@ -147,7 +149,25 @@ function App() {
       chromeSurface={getPrimarySurface()}
     >
       <ScrollToTop />
-      <RoutedPage content={content} locale={locale} setLocale={setLocale} />
+      <Routes>
+        <Route
+          path="/confidentialite"
+          element={
+            <LegalDocumentPage
+              doc={privacy[locale]}
+              locale={locale}
+              setLocale={setLocale}
+            />
+          }
+        />
+        <Route
+          path="/conditions"
+          element={
+            <LegalDocumentPage doc={terms[locale]} locale={locale} setLocale={setLocale} />
+          }
+        />
+        <Route path="*" element={<RoutedPage content={content} locale={locale} setLocale={setLocale} />} />
+      </Routes>
     </BlocksThemeProvider>
   )
 }
